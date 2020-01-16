@@ -132,13 +132,13 @@
     - block:
         - name: detect requirements.yml
           stat:
-            path: '{{project_path|quote}}/roles/requirements.yml'
+            path: '{{project_path|quote}}/deployment/roles/requirements.yml'
           register: doesRequirementsExist
 
         - name: fetch galaxy roles from requirements.yml
           command: ansible-galaxy install -r requirements.yml -p {{roles_destination|quote}}{{ ' -' + 'v' * ansible_verbosity if ansible_verbosity else '' }}
           args:
-            chdir: "{{project_path|quote}}/roles"
+            chdir: "{{project_path|quote}}/deployment/roles"
           register: galaxy_result
           when: doesRequirementsExist.stat.exists
           changed_when: "'was installed successfully' in galaxy_result.stdout"
@@ -152,13 +152,13 @@
     - block:
         - name: detect collections/requirements.yml
           stat:
-            path: '{{project_path|quote}}/collections/requirements.yml'
+            path: '{{project_path|quote}}/deployment/collections/requirements.yml'
           register: doesCollectionRequirementsExist
 
         - name: fetch galaxy collections from collections/requirements.yml
           command: ansible-galaxy collection install -r requirements.yml -p {{collections_destination|quote}}{{ ' -' + 'v' * ansible_verbosity if ansible_verbosity else '' }}
           args:
-            chdir: "{{project_path|quote}}/collections"
+            chdir: "{{project_path|quote}}/deployment/collections"
           register: galaxy_collection_result
           when: doesCollectionRequirementsExist.stat.exists
           changed_when: "'Installing ' in galaxy_collection_result.stdout"
